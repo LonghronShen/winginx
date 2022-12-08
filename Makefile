@@ -1,5 +1,5 @@
-NGINX_VERSION=1.6.0
-NSSM_VERSION=2.22
+NGINX_VERSION ?= 1.6.0
+NSSM_VERSION ?= 2.22
 
 NGINX_LINK=http://nginx.org/download/nginx-$(NGINX_VERSION).zip
 NGINX_PKG=nginx-$(NGINX_VERSION)
@@ -17,6 +17,8 @@ $(BIN): deps/$(NGINX_PKG)/* deps/$(NSSM_PKG)/*
 	cp -r src/*  tmp/
 	mv tmp/conf/nginx.conf tmp/conf/nginx.conf.orig
 	cp -r add-on/* tmp/
+	cd tmp && sed -i 's/PRODUCT_VERSION .*/PRODUCT_VERSION \"$(NGINX_VERSION)\"/g' nginx.nsi
+	# cd tmp && cat nginx.nsi
 	cd tmp && makensis nginx.nsi
 	mv tmp/nginx-service.exe build/nginx-service.exe
 
