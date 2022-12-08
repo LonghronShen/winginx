@@ -2,7 +2,11 @@
 
 set -x
 
-export NGINX_VERSION=1.23.2
+latestVer=$(curl -s 'http://nginx.org/en/download.html' | 
+   sed 's/</\'$'\n''</g' | sed -n '/>Stable version$/,$ p' | 
+   egrep -m1 -o '/download/nginx-.+\.tar\.gz' | grep -Po '(?<=nginx-).*(?=\.tar\.gz)')
+
+export NGINX_VERSION="$latestVer"
 export NSSM_VERSION=2.24
 
 pushd build
